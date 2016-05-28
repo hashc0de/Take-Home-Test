@@ -24,10 +24,7 @@ Test file: FlattenArrayTest.java
 Ques 3. We have some customer records in a text file (customers.json) -- one customer per line, JSON-encoded. We want to invite any customer within 100km of our Dublin office for some food and drinks on us. Write a program that will read the full list of customers and output the names and user ids of matching customers (within 100km), sorted by User ID (ascending).
 
 Solution file: InviteCustomers.java
-Test file: InviteCustomersTest.java
+Test file: InviteCustomersTest.java  Output is getting genrated in output.txt file under resources folder
 
 
-you can also run InviteCustomers.java as Java application and provide a location for file.
-For testing purpose I have used files under resource folder
-
-Total test coverage of the project in 94%
+Total test coverage of the project in 96.6%
