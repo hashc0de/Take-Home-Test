@@ -1,7 +1,10 @@
 package com.company.java;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -29,6 +32,8 @@ public class InviteCustomers {
 	private static final double EARTH_RADIUS = 6371.01;
 	private static final double BASE_LATITUDE = 53.3381985;
 	private static final double BASE_LONGITUDE = -6.2592576;
+
+	private static final String OUTPUT_FILE = "resources/output.txt";
 
 	/**
 	 * Retrieves the customer distance from the specified location, based on the
@@ -66,10 +71,9 @@ public class InviteCustomers {
 	 *
 	 * @param fileLocation
 	 *            - Path for the JSON file
-	 * @return Map - customers - user_id and name
 	 * @throws Exception
 	 */
-	static Map<Long, String> readJsonFile(File fileLocation) throws ApplicationException {
+	public static void readJsonFile(File fileLocation) throws ApplicationException {
 		try {
 			Map<Long, String> finalResult = new TreeMap<Long, String>();
 
@@ -82,27 +86,20 @@ public class InviteCustomers {
 					finalResult.put((Long) obj.get(USER_ID), (String) obj.get(NAME));
 				}
 			}
-
-			for (Map.Entry<Long, String> entry : finalResult.entrySet()) {
-				System.out.println(entry.getKey() + " : " + entry.getValue());
+			FileWriter fstream = new FileWriter(OUTPUT_FILE);
+			BufferedWriter out = new BufferedWriter(fstream);
+			for (Map.Entry<Long, String> each : finalResult.entrySet()) {
+				out.write(each.getKey() + "\t" + each.getValue() + "\n");
+				out.flush();
 			}
-			return finalResult;
+			fstream.close();
+			out.close();
 		} catch (FileNotFoundException e) {
 			throw new ApplicationException("File does not exist");
 		} catch (ParseException e) {
 			throw new ApplicationException("Invalid JSON format");
-		}
-	}
-
-	public static void main(String args[]) {
-		System.out.println("Please provide the customer.json file location:");
-		@SuppressWarnings("resource")
-		Scanner scan = new Scanner(System.in);
-		String fileLocation = scan.next();
-		try {
-			readJsonFile(new File(fileLocation));
-		} catch (ApplicationException e) {
-			e.printStackTrace();
+		} catch (IOException e) {
+			throw new ApplicationException("Not able to write in output file");
 		}
 	}
 

@@ -1,6 +1,9 @@
 package com.company.java;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -18,6 +21,7 @@ public class InviteCustomersTest {
 	private static final String FILE_LOCATION = "resources/customer.json";
 	private static final String INVALID_FILE_LOCATION = "resources/customer.js";
 	private static final String INVALID_JSON_FILE = "resources/invalidCustomer.json";
+	private static final String OUTPUT_FILE = "resources/output.txt";
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
@@ -38,7 +42,17 @@ public class InviteCustomersTest {
 
 	@Test
 	public void testInviteCustomers() throws Exception {
-		Map<Long, String> result = InviteCustomers.readJsonFile(new File(FILE_LOCATION));
-		Assert.assertTrue(result.containsKey(Long.valueOf(23)));
+		InviteCustomers.readJsonFile(new File(FILE_LOCATION));
+		Map<String, String> output = new HashMap<String, String>();
+		BufferedReader in = new BufferedReader(new FileReader(OUTPUT_FILE));
+		String line = "";
+		while ((line = in.readLine()) != null) {
+			String parts[] = line.split("\t");
+			output.put(parts[0].trim(), parts[1].trim());
+		}
+		in.close();
+		Assert.assertTrue(output.containsKey("4"));
+		Assert.assertTrue(output.containsKey("23"));
+		Assert.assertTrue(output.containsKey("31"));
 	}
 }
